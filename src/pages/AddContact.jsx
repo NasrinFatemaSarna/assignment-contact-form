@@ -1,80 +1,95 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
-import { useContacts } from "../context/ContactContext";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { addContact } from "../utils/storage";
 
 export default function AddContact() {
-  const { addContact } = useContacts();
   const navigate = useNavigate();
 
-  const [form, setForm] = useState({
-    fname: "",
-    lname: "",
-    email: "",
-    phone: ""
-  });
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [error, setError] = useState("");
 
-  const onSubmit = async (e) => {
+  function handleSubmit(e) {
     e.preventDefault();
-    await addContact(form);
-    navigate("/");
-  };
+    setError("");
+
+    // basic validation
+    if (!firstName.trim() || !lastName.trim() || !email.trim() || !phone.trim()) {
+      setError("Please fill all fields.");
+      return;
+    }
+
+    addContact({ firstName, lastName, email, phone });
+    navigate("/"); // go back to All Contacts page
+  }
 
   return (
-    <>
-      <Navbar />
+    <div className="container" style={{ maxWidth: 900, margin: "0 auto", padding: 20 }}>
+      <h2 style={{ marginBottom: 20 }}>Add New Contact</h2>
 
-      <div className="container py-5">
-        <div className="d-flex justify-content-between align-items-center mb-3">
-          <h2>Add New Contact</h2>
-          <Link to="/" className="btn btn-secondary">Back</Link>
+      <button
+        onClick={() => navigate("/")}
+        style={{ float: "right", marginTop: -55 }}
+        className="btn btn-secondary"
+      >
+        Back
+      </button>
+
+      {error ? (
+        <div style={{ marginBottom: 12, color: "white", background: "#d9534f", padding: 10, borderRadius: 6 }}>
+          {error}
+        </div>
+      ) : null}
+
+      <form onSubmit={handleSubmit}>
+        <div style={{ marginBottom: 12 }}>
+          <label>First Name</label>
+          <input
+            className="form-control"
+            value={firstName}
+            onChange={(e) => setFirstName(e.target.value)}
+            placeholder="First Name"
+          />
         </div>
 
-        <form className="card p-3" onSubmit={onSubmit}>
-          <div className="mb-3">
-            <label className="form-label">First Name</label>
-            <input
-              className="form-control"
-              required
-              value={form.fname}
-              onChange={(e) => setForm({ ...form, fname: e.target.value })}
-            />
-          </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>Last Name</label>
+          <input
+            className="form-control"
+            value={lastName}
+            onChange={(e) => setLastName(e.target.value)}
+            placeholder="Last Name"
+          />
+        </div>
 
-          <div className="mb-3">
-            <label className="form-label">Last Name</label>
-            <input
-              className="form-control"
-              required
-              value={form.lname}
-              onChange={(e) => setForm({ ...form, lname: e.target.value })}
-            />
-          </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>Email</label>
+          <input
+            className="form-control"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            placeholder="Email"
+            type="email"
+          />
+        </div>
 
-          <div className="mb-3">
-            <label className="form-label">Email</label>
-            <input
-              type="email"
-              className="form-control"
-              required
-              value={form.email}
-              onChange={(e) => setForm({ ...form, email: e.target.value })}
-            />
-          </div>
+        <div style={{ marginBottom: 12 }}>
+          <label>Phone</label>
+          <input
+            className="form-control"
+            value={phone}
+            onChange={(e) => setPhone(e.target.value)}
+            placeholder="Phone"
+          />
+        </div>
 
-          <div className="mb-3">
-            <label className="form-label">Phone</label>
-            <input
-              className="form-control"
-              required
-              value={form.phone}
-              onChange={(e) => setForm({ ...form, phone: e.target.value })}
-            />
-          </div>
-
-          <button className="btn btn-success">Save Contact</button>
-        </form>
-      </div>
-    </>
+        <button type="submit" className="btn btn-success" style={{ width: "100%" }}>
+          Save Contact
+        </button>
+      </form>
+    </div>
   );
 }
+
