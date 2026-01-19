@@ -1,17 +1,76 @@
-# React + Vite
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# Assignment Contact Form (Contact App)
 
-Currently, two official plugins are available:
+A Contact Management App built with **React (Vite)** and **Context API** for global state management.  
+Backend is simulated using **json-server** (REST API). The app supports CRUD operations, search, filter, and modal-based view/edit.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Live Demo
+https://nasrinfatemasarna.github.io/assignment-contact-form/
 
-## React Compiler
+> Note: GitHub Pages is a static hosting. `json-server` runs locally, so CRUD works in local environment.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+---
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
-# assignment-contact-form
+- ✅ Show all contacts in a table (Home page)
+- ✅ Add New Contact (separate page)
+- ✅ Show Contact Details in a Modal
+- ✅ Edit Contact in a Modal
+- ✅ Delete Contact with confirmation
+- ✅ Search contacts by: First Name, Last Name, Email, Phone
+- ✅ Filter contacts:
+  - First Name (A → Z)
+  - Last Name (A → Z)
+  - Oldest to First
+- ✅ Empty State: “No Contact Information” when list is empty or no search result
+
+---
+
+## Tech Stack
+
+- React (Vite)
+- React Router DOM
+- Context API (Global State Management)
+- Axios (API calls)
+- Bootstrap 5 + Font Awesome (UI)
+- json-server (Mock Backend REST API)
+
+---
+
+## Project Structure
+contact-app/
+├── backend/
+│ └── db.json
+└── src/
+├── api/
+├── components/
+├── context/
+├── pages/
+├── App.jsx
+└── main.jsx
+
+---
+
+## Setup & Run Locally
+
+### 1) Install dependencies (frontend)
+```bash
+npm install
+npm install axios react-router-dom bootstrap font-awesome
+
+cd backend
+json-server --watch db.json --port 3001
+http://localhost:3001/contacts
+npm run dev
+http://localhost:5173
+
+Deployment (GitHub Pages)
+
+This project is deployed using gh-pages.
+
+Build:
+npm run build
+
+Deploy:
+npm run deploy
