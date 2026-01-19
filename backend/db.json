@@ -1,0 +1,28 @@
+{
+  "contacts": [
+    {
+      "id": "f053",
+      "fname": "sarna",
+      "lname": "zaman",
+      "email": "sara@gmail.com",
+      "phone": "09867785675464",
+      "createdAt": "2026-01-19T16:13:28.932Z"
+    },
+    {
+      "id": "8d78",
+      "fname": "sara",
+      "lname": "zaman",
+      "email": "sara@gmail.com",
+      "phone": "09887686756754",
+      "createdAt": "2026-01-19T16:17:34.426Z"
+    },
+    {
+      "id": "b353",
+      "fname": "rima",
+      "lname": "zaman",
+      "email": "rima@gmail.com",
+      "phone": "0897896875785",
+      "createdAt": "2026-01-19T16:17:59.722Z"
+    }
+  ]
+}
