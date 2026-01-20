@@ -21,9 +21,13 @@ export default function HomePage() {
               className="input"
               placeholder="search contact"
               value={state.search}
-              onChange={(e) => dispatch({ type: "SET_SEARCH", payload: e.target.value })}
+              onChange={(e) =>
+                dispatch({ type: "SET_SEARCH", payload: e.target.value })
+              }
             />
-            <Link className="btnGreen" to="/assignment-contact-form/add">
+
+            {/* ✅ FIXED */}
+            <Link className="btnGreen" to="/add">
               + Add New
             </Link>
           </div>
@@ -34,7 +38,9 @@ export default function HomePage() {
           <select
             className="select"
             value={state.filter}
-            onChange={(e) => dispatch({ type: "SET_FILTER", payload: e.target.value })}
+            onChange={(e) =>
+              dispatch({ type: "SET_FILTER", payload: e.target.value })
+            }
           >
             <option value="DEFAULT">Default</option>
             <option value="FIRST_AZ">First Name (A → Z)</option>
