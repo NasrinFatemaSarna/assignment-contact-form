@@ -1,3 +1,28 @@
 {
-  "contacts": []
+  "contacts": [
+    {
+      "id": "a8a3",
+      "firstName": "sarna",
+      "lastName": "zaman",
+      "email": "sarna@gmail.com",
+      "phone": "8786785675",
+      "createdAt": "2026-01-20T15:12:09.849Z"
+    },
+    {
+      "id": "8a4a",
+      "firstName": "sara",
+      "lastName": "zaman",
+      "email": "sara@gmail.com",
+      "phone": "7856745634",
+      "createdAt": "2026-01-20T15:12:28.729Z"
+    },
+    {
+      "id": "6bbf",
+      "firstName": "farhan",
+      "lastName": "zaman",
+      "email": "farhan@gmail.com",
+      "phone": "868968789768",
+      "createdAt": "2026-01-20T15:35:45.853Z"
+    }
+  ]
 }

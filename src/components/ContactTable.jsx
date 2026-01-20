@@ -3,20 +3,16 @@ import { useContacts } from "../context/ContactContext";
 export default function ContactTable({ contacts }) {
   const { dispatch, removeContact } = useContacts();
 
-  const onShow = (c) =>
-    dispatch({ type: "OPEN_MODAL", payload: { contact: c, mode: "VIEW" } });
+  const onShow = (contact) =>
+    dispatch({ type: "OPEN_MODAL", payload: { contact, mode: "VIEW" } });
 
-  const onEdit = (c) =>
-    dispatch({ type: "OPEN_MODAL", payload: { contact: c, mode: "EDIT" } });
+  const onEdit = (contact) =>
+    dispatch({ type: "OPEN_MODAL", payload: { contact, mode: "EDIT" } });
 
-  const onDelete = async (c) => {
+  const onDelete = async (id) => {
     const ok = window.confirm("Are you sure you want to delete this contact?");
     if (!ok) return;
-    try {
-      await removeContact(c.id);
-    } catch (e) {
-      alert(e.message || "Delete failed");
-    }
+    await removeContact(id);
   };
 
   return (
@@ -24,12 +20,12 @@ export default function ContactTable({ contacts }) {
       <table className="table">
         <thead>
           <tr>
-            <th style={{ width: 50 }}>#</th>
+            <th>#</th>
             <th>First Name</th>
             <th>Last Name</th>
             <th>Email</th>
             <th>Phone</th>
-            <th style={{ width: 160 }}>Actions</th>
+            <th>Actions</th>
           </tr>
         </thead>
 
@@ -43,15 +39,9 @@ export default function ContactTable({ contacts }) {
               <td>{c.phone || "N/A"}</td>
               <td>
                 <div className="actionBtns">
-                  <button className="btnIcon blue" onClick={() => onShow(c)} title="View">
-                    👁
-                  </button>
-                  <button className="btnIcon gray" onClick={() => onEdit(c)} title="Edit">
-                    ✏️
-                  </button>
-                  <button className="btnIcon red" onClick={() => onDelete(c)} title="Delete">
-                    ✖
-                  </button>
+                  <button className="btnIcon blue" onClick={() => onShow(c)}>👁</button>
+                  <button className="btnIcon gray" onClick={() => onEdit(c)}>✏</button>
+                  <button className="btnIcon red" onClick={() => onDelete(c.id)}>✖</button>
                 </div>
               </td>
             </tr>

@@ -1,76 +1,77 @@
 import { useState } from "react";
 
 export default function ContactForm({
-  initialValues,
   onSubmit,
+  initialValues = { firstName: "", lastName: "", email: "", phone: "" },
   submitText = "Save",
   disabled = false,
 }) {
-  const [values, setValues] = useState(initialValues);
+  const [form, setForm] = useState(initialValues);
 
-  const onChange = (e) =>
-    setValues((p) => ({ ...p, [e.target.name]: e.target.value }));
+  const onChange = (e) => {
+    setForm((p) => ({ ...p, [e.target.name]: e.target.value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(values);
+    onSubmit({
+      firstName: form.firstName.trim(),
+      lastName: form.lastName.trim(),
+      email: form.email.trim(),
+      phone: form.phone.trim(),
+    });
   };
 
   return (
-    <form className="formPro" onSubmit={handleSubmit}>
-      <div className="grid2">
-        <label className="label">
-          First Name *
-          <input
-            className="inputPro"
-            name="firstName"
-            value={values.firstName}
-            onChange={onChange}
-            placeholder="e.g. Rani"
-            required
-          />
-        </label>
+    <form className="form" onSubmit={handleSubmit}>
+      <label className="label">
+        First Name
+        <input
+          className="input"
+          name="firstName"
+          value={form.firstName}
+          onChange={onChange}
+          placeholder="First Name"
+          required
+        />
+      </label>
 
-        <label className="label">
-          Last Name *
-          <input
-            className="inputPro"
-            name="lastName"
-            value={values.lastName}
-            onChange={onChange}
-            placeholder="e.g. Zaman"
-            required
-          />
-        </label>
+      <label className="label">
+        Last Name
+        <input
+          className="input"
+          name="lastName"
+          value={form.lastName}
+          onChange={onChange}
+          placeholder="Last Name"
+          required
+        />
+      </label>
 
-        <label className="label">
-          Email
-          <input
-            className="inputPro"
-            name="email"
-            type="email"
-            value={values.email}
-            onChange={onChange}
-            placeholder="e.g. rani@gmail.com"
-          />
-          <small>Optional — used for quick contact.</small>
-        </label>
+      <label className="label">
+        Email
+        <input
+          className="input"
+          name="email"
+          value={form.email}
+          onChange={onChange}
+          placeholder="Email"
+        />
+      </label>
 
-        <label className="label">
-          Phone *
-          <input
-            className="inputPro"
-            name="phone"
-            value={values.phone}
-            onChange={onChange}
-            placeholder="e.g. 0897896875785"
-            required
-          />
-          <small>Digits only. You may include +countrycode.</small>
-        </label>
-      </div>
+      <label className="label">
+        Phone
+        <input
+          className="input"
+          name="phone"
+          value={form.phone}
+          onChange={onChange}
+          placeholder="Phone"
+          required
+        />
+      </label>
 
-      <button className="btnPrimary" disabled={disabled} type="submit">
+      <button className="btn" disabled={disabled}>
         {submitText}
       </button>
     </form>

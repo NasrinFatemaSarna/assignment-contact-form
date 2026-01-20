@@ -1,43 +1,25 @@
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useContacts } from "../context/ContactContext";
 import ContactForm from "../components/ContactForm";
 
 export default function AddContactPage() {
-  const navigate = useNavigate();
   const { addContact } = useContacts();
-  const [saving, setSaving] = useState(false);
-  const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-  async function onSubmit(values) {
-    setSaving(true);
-    setError("");
-    try {
-      await addContact(values);
-      navigate("/assignment-contact-form");
-    } catch (e) {
-      setError(e.message || "Failed to add contact");
-    } finally {
-      setSaving(false);
-    }
-  }
+  const onSubmit = async (values) => {
+    await addContact(values);
+    navigate("/assignment-contact-form/");
+  };
 
   return (
     <div className="page">
-      <header className="header">
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
         <h1>Add New Contact</h1>
-        <Link className="addLink" to="/assignment-contact-form">Back</Link>
-      </header>
+        <button className="btnGreen" onClick={() => navigate(-1)}>Back</button>
+      </div>
 
       <div className="panelLike">
-        {error && <p className="error">{error}</p>}
-
-        <ContactForm
-          initialValues={{ firstName: "", lastName: "", email: "", phone: "" }}
-          onSubmit={onSubmit}
-          submitText={saving ? "Saving..." : "Save Contact"}
-          disabled={saving}
-        />
+        <ContactForm onSubmit={onSubmit} submitText="Save Contact" />
       </div>
     </div>
   );

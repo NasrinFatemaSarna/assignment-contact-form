@@ -3,19 +3,12 @@ import { useContacts } from "../context/ContactContext";
 import ContactForm from "./ContactForm";
 
 export default function ContactModal() {
-  const { state, dispatch, editContact } = useContacts();
+  const { state, dispatch, updateContact } = useContacts(); // ✅ editContact না
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
 
   const c = state.selected;
   if (!c) return null;
-
-  // ✅ SAFE name resolver (important)
-  const firstName = c.firstName?.trim() || "";
-  const lastName = c.lastName?.trim() || "";
-
-  const displayFirstName = firstName || "N/A";
-  const displayLastName = lastName || "N/A";
 
   const close = () => dispatch({ type: "CLOSE_MODAL" });
 
@@ -26,13 +19,13 @@ export default function ContactModal() {
     setSaving(true);
     setError("");
     try {
-      await editContact(c.id, values);
+      const updated = await updateContact(c.id, values);
       dispatch({
         type: "OPEN_MODAL",
-        payload: { contact: { ...c, ...values }, mode: "VIEW" },
+        payload: { contact: updated, mode: "VIEW" },
       });
     } catch (e) {
-      setError(e.message || "Update failed");
+      setError(e?.message || "Update failed");
     } finally {
       setSaving(false);
     }
@@ -42,9 +35,7 @@ export default function ContactModal() {
     <div className="modalOverlay" onClick={close}>
       <div className="modal" onClick={(e) => e.stopPropagation()}>
         <div className="modalHeader">
-          <h2>
-            {state.modalMode === "EDIT" ? "Edit Contact" : "Contact Details"}
-          </h2>
+          <h2>{state.modalMode === "EDIT" ? "Edit Contact" : "Contact Details"}</h2>
           <button className="iconBtn" onClick={close}>✖</button>
         </div>
 
@@ -52,21 +43,17 @@ export default function ContactModal() {
 
         {state.modalMode === "VIEW" ? (
           <div className="details">
-            <p><b>First Name:</b> {displayFirstName}</p>
-            <p><b>Last Name:</b> {displayLastName}</p>
+            <p><b>First Name:</b> {c.firstName || "N/A"}</p>
+            <p><b>Last Name:</b> {c.lastName || "N/A"}</p>
             <p><b>Email:</b> {c.email || "N/A"}</p>
             <p><b>Phone:</b> {c.phone || "N/A"}</p>
-
-            <div style={{ display: "flex", gap: "10px", marginTop: "16px" }}>
-              <button className="btn" onClick={close}>Close</button>
-              <button className="btnGreen" onClick={switchToEdit}>Edit</button>
-            </div>
+            <button className="btn" onClick={switchToEdit}>Edit</button>
           </div>
         ) : (
           <ContactForm
             initialValues={{
-              firstName: firstName,
-              lastName: lastName,
+              firstName: c.firstName || "",
+              lastName: c.lastName || "",
               email: c.email || "",
               phone: c.phone || "",
             }}

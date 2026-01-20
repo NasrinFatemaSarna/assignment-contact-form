@@ -26,8 +26,7 @@ export default function HomePage() {
               }
             />
 
-            {/* ✅ FIXED */}
-            <Link className="btnGreen" to="/add">
+            <Link className="btnGreen" to="/assignment-contact-form/add">
               + Add New
             </Link>
           </div>
@@ -35,6 +34,7 @@ export default function HomePage() {
 
         <div className="filterRow">
           <div className="filterTitle">Filter</div>
+
           <select
             className="select"
             value={state.filter}

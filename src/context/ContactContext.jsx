@@ -10,27 +10,25 @@ const ContactContext = createContext(null);
 
 const initialState = {
   contacts: [],
-  loading: false,
-  error: null,
-
+  loading: true,
+  error: "",
   search: "",
-  filter: "DEFAULT",
-
+  filter: "DEFAULT", // DEFAULT | FIRST_AZ | LAST_AZ | OLD_FIRST
   modalOpen: false,
-  modalMode: "VIEW",
+  modalMode: "VIEW", // VIEW | EDIT
   selected: null,
 };
 
 function reducer(state, action) {
   switch (action.type) {
-    case "LOADING":
-      return { ...state, loading: true, error: null };
+    case "SET_CONTACTS":
+      return { ...state, contacts: action.payload, loading: false, error: "" };
+
+    case "SET_LOADING":
+      return { ...state, loading: action.payload };
 
     case "ERROR":
-      return { ...state, loading: false, error: action.payload || "Error" };
-
-    case "SET_CONTACTS":
-      return { ...state, loading: false, error: null, contacts: action.payload || [] };
+      return { ...state, error: action.payload, loading: false };
 
     case "SET_SEARCH":
       return { ...state, search: action.payload };
@@ -42,12 +40,12 @@ function reducer(state, action) {
       return {
         ...state,
         modalOpen: true,
-        selected: action.payload.contact,
         modalMode: action.payload.mode,
+        selected: action.payload.contact,
       };
 
     case "CLOSE_MODAL":
-      return { ...state, modalOpen: false, selected: null, modalMode: "VIEW" };
+      return { ...state, modalOpen: false, modalMode: "VIEW", selected: null };
 
     default:
       return state;
@@ -57,69 +55,107 @@ function reducer(state, action) {
 export function ContactProvider({ children }) {
   const [state, dispatch] = useReducer(reducer, initialState);
 
-  async function loadContacts() {
-    dispatch({ type: "LOADING" });
-    try {
-      const data = await getContactsApi();
-      dispatch({ type: "SET_CONTACTS", payload: data });
-    } catch (e) {
-      dispatch({ type: "ERROR", payload: e.message });
-    }
-  }
+  // ✅ Load contacts
+  useEffect(() => {
+    (async () => {
+      try {
+        dispatch({ type: "SET_LOADING", payload: true });
+        const data = await getContactsApi();
 
-  async function addContact(values) {
-    const createdAt = new Date().toISOString();
-    const created = await addContactApi({ ...values, createdAt });
-    dispatch({ type: "SET_CONTACTS", payload: [created, ...state.contacts] });
-  }
+        // ✅ ensure firstName/lastName always exist
+        const normalized = data.map((c) => ({
+          ...c,
+          firstName: c.firstName || "",
+          lastName: c.lastName || "",
+        }));
 
-  async function editContact(id, patch) {
-    const updated = await updateContactApi(id, patch);
+        dispatch({ type: "SET_CONTACTS", payload: normalized });
+      } catch (e) {
+        dispatch({
+          type: "ERROR",
+          payload: e?.message || "Failed to load contacts",
+        });
+      }
+    })();
+  }, []);
+
+  // ✅ CRUD
+  const addContact = async (payload) => {
+    const created = await addContactApi({
+      ...payload,
+      firstName: payload.firstName || "",
+      lastName: payload.lastName || "",
+      createdAt: payload.createdAt || new Date().toISOString(),
+    });
+
+    dispatch({
+      type: "SET_CONTACTS",
+      payload: [...state.contacts, created],
+    });
+  };
+
+  const updateContact = async (id, patch) => {
+    const updated = await updateContactApi(id, {
+      ...patch,
+      firstName: patch.firstName || "",
+      lastName: patch.lastName || "",
+    });
+
     dispatch({
       type: "SET_CONTACTS",
       payload: state.contacts.map((c) => (c.id === id ? updated : c)),
     });
-  }
 
-  async function removeContact(id) {
+    return updated;
+  };
+
+  const removeContact = async (id) => {
     await deleteContactApi(id);
-    dispatch({ type: "SET_CONTACTS", payload: state.contacts.filter((c) => c.id !== id) });
-    dispatch({ type: "CLOSE_MODAL" });
-  }
+    dispatch({
+      type: "SET_CONTACTS",
+      payload: state.contacts.filter((c) => c.id !== id),
+    });
+  };
 
+  // ✅ Derived list (search + sort/filter)
   const derivedContacts = useMemo(() => {
     const q = state.search.trim().toLowerCase();
 
-    let list = [...state.contacts].filter((c) => {
-      const hay = `${c.firstName || ""} ${c.lastName || ""} ${c.email || ""} ${c.phone || ""}`.toLowerCase();
-      return hay.includes(q);
-    });
+    let list = [...state.contacts];
 
-    if (state.filter === "FIRST_AZ")
+    // Search by firstName/lastName/email/phone
+    if (q) {
+      list = list.filter((c) => {
+        const hay = `${c.firstName} ${c.lastName} ${c.email} ${c.phone}`.toLowerCase();
+        return hay.includes(q);
+      });
+    }
+
+    // Filter/sort
+    if (state.filter === "FIRST_AZ") {
       list.sort((a, b) => (a.firstName || "").localeCompare(b.firstName || ""));
-    if (state.filter === "LAST_AZ")
+    } else if (state.filter === "LAST_AZ") {
       list.sort((a, b) => (a.lastName || "").localeCompare(b.lastName || ""));
-    if (state.filter === "OLD_FIRST")
+    } else if (state.filter === "OLD_FIRST") {
       list.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+    }
 
     return list;
   }, [state.contacts, state.search, state.filter]);
-
-  useEffect(() => {
-    loadContacts();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   return (
     <ContactContext.Provider
       value={{
         state,
-        dispatch, // ✅ expose dispatch
-        loadContacts,
-        addContact,
-        editContact,
-        removeContact,
+        dispatch,
         derivedContacts,
+        addContact,
+        updateContact,
+
+        // ✅ alias: আপনার modal যদি editContact কল করে
+        editContact: updateContact,
+
+        removeContact,
       }}
     >
       {children}
@@ -127,8 +163,4 @@ export function ContactProvider({ children }) {
   );
 }
 
-export function useContacts() {
-  const ctx = useContext(ContactContext);
-  if (!ctx) throw new Error("useContacts must be used within ContactProvider");
-  return ctx;
-}
+export const useContacts = () => useContext(ContactContext);
