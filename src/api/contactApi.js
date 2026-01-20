@@ -1,9 +1,38 @@
-import axios from "axios";
+const BASE_URL = "http://localhost:3001"; // ✅ your json-server port
 
-export const API_URL = "http://localhost:3001/contacts";
+async function handle(res) {
+  if (!res.ok) {
+    const text = await res.text().catch(() => "");
+    throw new Error(text || "Request failed");
+  }
+  return res.json().catch(() => null);
+}
 
+export async function getContactsApi() {
+  const res = await fetch(`${BASE_URL}/contacts`);
+  return handle(res);
+}
 
-export const getContactsApi = () => axios.get(API_URL);
-export const addContactApi = (data) => axios.post(API_URL, data);
-export const updateContactApi = (id, data) => axios.put(`${API_URL}/${id}`, data);
-export const deleteContactApi = (id) => axios.delete(`${API_URL}/${id}`);
+export async function addContactApi(payload) {
+  const res = await fetch(`${BASE_URL}/contacts`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  });
+  return handle(res);
+}
+
+export async function updateContactApi(id, patch) {
+  const res = await fetch(`${BASE_URL}/contacts/${id}`, {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(patch),
+  });
+  return handle(res);
+}
+
+export async function deleteContactApi(id) {
+  const res = await fetch(`${BASE_URL}/contacts/${id}`, { method: "DELETE" });
+  if (!res.ok) throw new Error("Delete failed");
+  return true;
+}
