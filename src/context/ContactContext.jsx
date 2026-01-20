@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useMemo, useReducer } from "react";
-import { getContactsApi, addContactApi, updateContactApi, deleteContactApi } from "../api/contactApi";
+import {
+  getContactsApi,
+  addContactApi,
+  updateContactApi,
+  deleteContactApi,
+} from "../api/contactApi";
 
 const ContactContext = createContext(null);
 
@@ -9,10 +14,10 @@ const initialState = {
   error: null,
 
   search: "",
-  filter: "OLD_FIRST", // FIRST_AZ | LAST_AZ | OLD_FIRST
+  filter: "DEFAULT",
 
   modalOpen: false,
-  modalMode: "VIEW", // VIEW | EDIT
+  modalMode: "VIEW",
   selected: null,
 };
 
@@ -86,13 +91,16 @@ export function ContactProvider({ children }) {
     const q = state.search.trim().toLowerCase();
 
     let list = [...state.contacts].filter((c) => {
-      const hay = `${c.firstName} ${c.lastName} ${c.email} ${c.phone}`.toLowerCase();
+      const hay = `${c.firstName || ""} ${c.lastName || ""} ${c.email || ""} ${c.phone || ""}`.toLowerCase();
       return hay.includes(q);
     });
 
-    if (state.filter === "FIRST_AZ") list.sort((a, b) => (a.firstName || "").localeCompare(b.firstName || ""));
-    if (state.filter === "LAST_AZ") list.sort((a, b) => (a.lastName || "").localeCompare(b.lastName || ""));
-    if (state.filter === "OLD_FIRST") list.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
+    if (state.filter === "FIRST_AZ")
+      list.sort((a, b) => (a.firstName || "").localeCompare(b.firstName || ""));
+    if (state.filter === "LAST_AZ")
+      list.sort((a, b) => (a.lastName || "").localeCompare(b.lastName || ""));
+    if (state.filter === "OLD_FIRST")
+      list.sort((a, b) => new Date(a.createdAt || 0) - new Date(b.createdAt || 0));
 
     return list;
   }, [state.contacts, state.search, state.filter]);
@@ -104,7 +112,15 @@ export function ContactProvider({ children }) {
 
   return (
     <ContactContext.Provider
-      value={{ state, dispatch, loadContacts, addContact, editContact, removeContact, derivedContacts }}
+      value={{
+        state,
+        dispatch, // ✅ expose dispatch
+        loadContacts,
+        addContact,
+        editContact,
+        removeContact,
+        derivedContacts,
+      }}
     >
       {children}
     </ContactContext.Provider>

@@ -26,19 +26,19 @@ export default function AddContactPage() {
     <div className="page">
       <header className="header">
         <h1>Add New Contact</h1>
-        <Link className="addLink" to="/assignment-contact-form">
-          Back
-        </Link>
+        <Link className="addLink" to="/assignment-contact-form">Back</Link>
       </header>
 
-      {error && <p className="error">{error}</p>}
+      <div className="panelLike">
+        {error && <p className="error">{error}</p>}
 
-      <ContactForm
-        initialValues={{ firstName: "", lastName: "", email: "", phone: "" }}
-        onSubmit={onSubmit}
-        submitText={saving ? "Saving..." : "Save Contact"}
-        disabled={saving}
-      />
+        <ContactForm
+          initialValues={{ firstName: "", lastName: "", email: "", phone: "" }}
+          onSubmit={onSubmit}
+          submitText={saving ? "Saving..." : "Save Contact"}
+          disabled={saving}
+        />
+      </div>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import ContactCard from "./ContactCard";
+import ContactCard from "../components/ContactCard.jsx";
 
 export default function ContactList({ contacts }) {
   return (

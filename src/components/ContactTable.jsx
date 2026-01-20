@@ -1,65 +1,54 @@
 import { useContacts } from "../context/ContactContext";
 
-export default function ContactTable() {
-  const { visibleContacts, setShowContact, setEditContact, deleteContact, loading } =
-    useContacts();
+export default function ContactTable({ contacts }) {
+  const { dispatch, removeContact } = useContacts();
 
-  if (loading) return <div className="p-3">Loading...</div>;
+  const onShow = (contact) =>
+    dispatch({ type: "OPEN_MODAL", payload: { contact, mode: "VIEW" } });
 
-  if (visibleContacts.length === 0) {
-    return <div className="text-center py-3">No Contact Information</div>;
-  }
+  const onEdit = (contact) =>
+    dispatch({ type: "OPEN_MODAL", payload: { contact, mode: "EDIT" } });
+
+  const onDelete = async (contact) => {
+    const ok = window.confirm("Are you sure you want to delete this contact?");
+    if (!ok) return;
+    await removeContact(contact.id);
+  };
 
   return (
-    <div className="table-responsive">
-      <table className="table table-striped table-hover">
+    <div className="tableWrap">
+      <table className="table">
         <thead>
           <tr>
-            <th scope="col">#</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Actions</th>
+            <th style={{ width: 50 }}>#</th>
+            <th>First Name</th>
+            <th>Last Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th style={{ width: 160 }}>Actions</th>
           </tr>
         </thead>
 
         <tbody>
-          {visibleContacts.map((c, i) => (
+          {contacts.map((c, idx) => (
             <tr key={c.id}>
-              <td>{i + 1}</td>
-              <td>{c.fname}</td>
-              <td>{c.lname}</td>
-              <td>{c.email}</td>
-              <td>{c.phone}</td>
-              <td width="150">
-                <button
-                  className="btn btn-sm btn-circle btn-outline-info me-1"
-                  title="Show"
-                  onClick={() => setShowContact(c)}
-                >
-                  <i className="fa fa-eye"></i>
-                </button>
-
-                <button
-                  className="btn btn-sm btn-circle btn-outline-secondary me-1"
-                  title="Edit"
-                  onClick={() => setEditContact(c)}
-                >
-                  <i className="fa fa-edit"></i>
-                </button>
-
-                <button
-                  className="btn btn-sm btn-circle btn-outline-danger"
-                  title="Delete"
-                  onClick={async () => {
-                    if (confirm("Are you sure?")) {
-                      await deleteContact(c.id);
-                    }
-                  }}
-                >
-                  <i className="fa fa-times"></i>
-                </button>
+              <td>{idx + 1}</td>
+              <td>{c.firstName || "N/A"}</td>
+              <td>{c.lastName || "N/A"}</td>
+              <td>{c.email || "N/A"}</td>
+              <td>{c.phone || "N/A"}</td>
+              <td>
+                <div className="actionBtns">
+                  <button className="btnIcon blue" onClick={() => onShow(c)} title="View">
+                    👁
+                  </button>
+                  <button className="btnIcon gray" onClick={() => onEdit(c)} title="Edit">
+                    ✏️
+                  </button>
+                  <button className="btnIcon red" onClick={() => onDelete(c)} title="Delete">
+                    ✖
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

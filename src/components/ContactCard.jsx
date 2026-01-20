@@ -3,8 +3,17 @@ import { useContacts } from "../context/ContactContext";
 export default function ContactCard({ contact }) {
   const { dispatch, removeContact } = useContacts();
 
-  const fullName =
-    `${contact.firstName || ""} ${contact.lastName || ""}`.trim() || "Unknown";
+  const firstName = contact.firstName?.trim() || "";
+  const lastName = contact.lastName?.trim() || "";
+
+  let displayName = "UNKNOWN";
+  if (firstName && lastName) {
+    displayName = `${firstName} ${lastName}`;
+  } else if (firstName) {
+    displayName = firstName;
+  } else if (lastName) {
+    displayName = lastName;
+  }
 
   const onShow = () =>
     dispatch({ type: "OPEN_MODAL", payload: { contact, mode: "VIEW" } });
@@ -25,7 +34,7 @@ export default function ContactCard({ contact }) {
   return (
     <div className="card">
       <div className="cardText">
-        <div className="name">{fullName.toUpperCase()}</div>
+        <div className="name">{displayName.toUpperCase()}</div>
         <div className="sub">{contact.email}</div>
         <div className="sub">{contact.phone}</div>
       </div>
