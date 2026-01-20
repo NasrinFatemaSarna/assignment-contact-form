@@ -1,76 +1,188 @@
+📇 Contact App
 
-# Assignment Contact Form (Contact App)
+A simple and clean Contact Management Application built with React (Vite).
+Users can add, view, edit, delete, search, and filter contacts easily.
 
-A Contact Management App built with **React (Vite)** and **Context API** for global state management.  
-Backend is simulated using **json-server** (REST API). The app supports CRUD operations, search, filter, and modal-based view/edit.
+🔗 Live Demo:
+👉 https://nasrinfatemasarna.github.io/assignment-contact-form/
 
-## Live Demo
-https://nasrinfatemasarna.github.io/assignment-contact-form/
+✨ Features
 
-> Note: GitHub Pages is a static hosting. `json-server` runs locally, so CRUD works in local environment.
+➕ Add new contact
 
----
+👁 View contact details (modal)
 
-## Features
+✏️ Edit contact information
 
-- ✅ Show all contacts in a table (Home page)
-- ✅ Add New Contact (separate page)
-- ✅ Show Contact Details in a Modal
-- ✅ Edit Contact in a Modal
-- ✅ Delete Contact with confirmation
-- ✅ Search contacts by: First Name, Last Name, Email, Phone
-- ✅ Filter contacts:
-  - First Name (A → Z)
-  - Last Name (A → Z)
-  - Oldest to First
-- ✅ Empty State: “No Contact Information” when list is empty or no search result
+❌ Delete contact with confirmation
 
----
+🔍 Search contacts (name, email, phone)
 
-## Tech Stack
+🎯 Filter & sort contacts
 
-- React (Vite)
-- React Router DOM
-- Context API (Global State Management)
-- Axios (API calls)
-- Bootstrap 5 + Font Awesome (UI)
-- json-server (Mock Backend REST API)
+📱 Responsive & clean UI
 
----
+💾 Data stored using json-server
 
-## Project Structure
+🛠 Tech Stack
+
+Frontend: React + Vite
+
+State Management: React Context API
+
+Routing: React Router
+
+Backend (Mock API): json-server
+
+Styling: CSS
+
+Deployment: GitHub Pages
+
+📂 Project Structure
 contact-app/
 ├── backend/
-│ └── db.json
-└── src/
-├── api/
-├── components/
-├── context/
-├── pages/
-├── App.jsx
-└── main.jsx
+│   └── db.json
+├── public/
+├── src/
+│   ├── api/
+│   │   └── contactApi.js
+│   ├── components/
+│   │   ├── ContactCard.jsx
+│   │   ├── ContactForm.jsx
+│   │   ├── ContactList.jsx
+│   │   ├── ContactModal.jsx
+│   │   ├── ContactTable.jsx
+│   │   ├── EditModal.jsx
+│   │   ├── Filter.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── SearchBar.jsx
+│   │   └── ShowModal.jsx
+│   ├── context/
+│   │   └── ContactContext.jsx
+│   ├── pages/
+│   │   ├── AddContactPage.jsx
+│   │   └── HomePage.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   ├── App.css
+│   └── index.css
+├── index.html
+├── package.json
+├── vite.config.js
+└── README.md
 
----
+🚀 Getting Started (Local Setup)
+1️⃣ Clone the repository
+git clone https://github.com/NasrinFatemaSarna/assignment-contact-form.git
+cd assignment-contact-form
 
-## Setup & Run Locally
-
-### 1) Install dependencies (frontend)
-```bash
+2️⃣ Install dependencies
 npm install
-npm install axios react-router-dom bootstrap font-awesome
 
-cd backend
-json-server --watch db.json --port 3001
-http://localhost:3001/contacts
+3️⃣ Start json-server (Backend)
+npx json-server --watch backend/db.json --port 3001
+
+4️⃣ Run the React app
 npm run dev
-http://localhost:5173
 
-Deployment (GitHub Pages)
 
-This project is deployed using gh-pages.
+📍 App will run at:
+http://localhost:5173/assignment-contact-form/
 
-Build:
-npm run build
+📍 API will run at:
+http://localhost:3001/contacts
 
-Deploy:
-npm run deploy
+📇 Contact App
+
+A simple and clean Contact Management Application built with React (Vite).
+Users can add, view, edit, delete, search, and filter contacts easily.
+
+🔗 Live Demo:
+👉 https://nasrinfatemasarna.github.io/assignment-contact-form/
+
+✨ Features
+
+➕ Add new contact
+
+👁 View contact details (modal)
+
+✏️ Edit contact information
+
+❌ Delete contact with confirmation
+
+🔍 Search contacts (name, email, phone)
+
+🎯 Filter & sort contacts
+
+📱 Responsive & clean UI
+
+💾 Data stored using json-server
+
+🛠 Tech Stack
+
+Frontend: React + Vite
+
+State Management: React Context API
+
+Routing: React Router
+
+Backend (Mock API): json-server
+
+Styling: CSS
+
+Deployment: GitHub Pages
+
+📂 Project Structure
+contact-app/
+├── backend/
+│   └── db.json
+├── public/
+├── src/
+│   ├── api/
+│   │   └── contactApi.js
+│   ├── components/
+│   │   ├── ContactCard.jsx
+│   │   ├── ContactForm.jsx
+│   │   ├── ContactList.jsx
+│   │   ├── ContactModal.jsx
+│   │   ├── ContactTable.jsx
+│   │   ├── EditModal.jsx
+│   │   ├── Filter.jsx
+│   │   ├── Navbar.jsx
+│   │   ├── SearchBar.jsx
+│   │   └── ShowModal.jsx
+│   ├── context/
+│   │   └── ContactContext.jsx
+│   ├── pages/
+│   │   ├── AddContactPage.jsx
+│   │   └── HomePage.jsx
+│   ├── App.jsx
+│   ├── main.jsx
+│   ├── App.css
+│   └── index.css
+├── index.html
+├── package.json
+├── vite.config.js
+└── README.md
+
+🚀 Getting Started (Local Setup)
+1️⃣ Clone the repository
+git clone https://github.com/NasrinFatemaSarna/assignment-contact-form.git
+cd assignment-contact-form
+
+2️⃣ Install dependencies
+npm install
+
+3️⃣ Start json-server (Backend)
+npx json-server --watch backend/db.json --port 3001
+
+4️⃣ Run the React app
+npm run dev
+
+
+📍 App will run at:
+http://localhost:5173/assignment-contact-form/
+
+📍 API will run at:
+http://localhost:3001/contacts
+
