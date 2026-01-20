@@ -1,38 +1,24 @@
-const BASE_URL = "http://localhost:3001"; // ✅ your json-server port
+const BASE_URL = "http://localhost:3001";
+const RESOURCE = "contacts";
 
-async function handle(res) {
+async function http(url, options = {}) {
+  const res = await fetch(url, {
+    headers: { "Content-Type": "application/json" },
+    ...options,
+  });
   if (!res.ok) {
-    const text = await res.text().catch(() => "");
-    throw new Error(text || "Request failed");
+    const text = await res.text();
+    throw new Error(text || `Request failed: ${res.status}`);
   }
-  return res.json().catch(() => null);
+  return res.json();
 }
 
-export async function getContactsApi() {
-  const res = await fetch(`${BASE_URL}/contacts`);
-  return handle(res);
-}
+export const getContactsApi = () => http(`${BASE_URL}/${RESOURCE}`);
+export const addContactApi = (payload) =>
+  http(`${BASE_URL}/${RESOURCE}`, { method: "POST", body: JSON.stringify(payload) });
 
-export async function addContactApi(payload) {
-  const res = await fetch(`${BASE_URL}/contacts`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  });
-  return handle(res);
-}
+export const updateContactApi = (id, patch) =>
+  http(`${BASE_URL}/${RESOURCE}/${id}`, { method: "PATCH", body: JSON.stringify(patch) });
 
-export async function updateContactApi(id, patch) {
-  const res = await fetch(`${BASE_URL}/contacts/${id}`, {
-    method: "PATCH",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(patch),
-  });
-  return handle(res);
-}
-
-export async function deleteContactApi(id) {
-  const res = await fetch(`${BASE_URL}/contacts/${id}`, { method: "DELETE" });
-  if (!res.ok) throw new Error("Delete failed");
-  return true;
-}
+export const deleteContactApi = (id) =>
+  http(`${BASE_URL}/${RESOURCE}/${id}`, { method: "DELETE" });

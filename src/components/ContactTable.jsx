@@ -3,16 +3,20 @@ import { useContacts } from "../context/ContactContext";
 export default function ContactTable({ contacts }) {
   const { dispatch, removeContact } = useContacts();
 
-  const onShow = (contact) =>
-    dispatch({ type: "OPEN_MODAL", payload: { contact, mode: "VIEW" } });
+  const onShow = (c) =>
+    dispatch({ type: "OPEN_MODAL", payload: { contact: c, mode: "VIEW" } });
 
-  const onEdit = (contact) =>
-    dispatch({ type: "OPEN_MODAL", payload: { contact, mode: "EDIT" } });
+  const onEdit = (c) =>
+    dispatch({ type: "OPEN_MODAL", payload: { contact: c, mode: "EDIT" } });
 
-  const onDelete = async (contact) => {
+  const onDelete = async (c) => {
     const ok = window.confirm("Are you sure you want to delete this contact?");
     if (!ok) return;
-    await removeContact(contact.id);
+    try {
+      await removeContact(c.id);
+    } catch (e) {
+      alert(e.message || "Delete failed");
+    }
   };
 
   return (
